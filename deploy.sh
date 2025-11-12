@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# Script de despliegue para AWS Lambda
+set -e
+
+echo "🚀 Desplegando API de Usuarios a AWS Lambda"
+echo "==========================================="
+echo ""
+
+# Verificar que serverless esté instalado
+if ! command -v serverless &> /dev/null; then
+    echo "❌ Serverless Framework no está instalado"
+    echo "📦 Instala con: npm install -g serverless"
+    exit 1
+fi
+
+echo "✅ Serverless Framework encontrado"
+echo ""
+
+# Limpiar compilaciones anteriores
+echo "🧹 Limpiando compilaciones anteriores..."
+./mvnw clean
+echo ""
+
+# Compilar el proyecto
+echo "📦 Compilando proyecto Quarkus para Lambda..."
+./mvnw package -DskipTests
+echo ""
+
+# Verificar que el archivo function.zip existe
+if [ ! -f "target/function.zip" ]; then
+    echo "❌ No se encontró target/function.zip"
+    echo "Verifica que la compilación haya sido exitosa"
+    exit 1
+fi
+
+echo "✅ Compilación exitosa - function.zip creado"
+echo ""
+
+# Obtener el stage (dev, prod, etc)
+STAGE=${1:-dev}
+echo "🌍 Desplegando a stage: $STAGE"
+echo "📋 Tabla DynamoDB: ${STAGE}-usuarios"
+echo ""
+
+# Desplegar con Serverless
+echo "🚀 Desplegando a AWS..."
+serverless deploy --stage $STAGE
+
+echo ""
+echo "✅ Despliegue completado!"
+echo ""
+echo "📝 Próximos pasos:"
+echo "  1. Copia el endpoint URL que se muestra arriba"
+echo "  2. La tabla '${STAGE}-usuarios' ya fue creada automáticamente"
+echo "  3. Prueba creando un usuario con curl"
+echo ""
+echo "Ejemplo:"
+echo "  export API_URL=<tu-endpoint-url>"
+echo "  curl -X POST \$API_URL/api/usuarios -H 'Content-Type: application/json' -d '{\"nombre\":\"Juan\",\"email\":\"juan@test.com\"}'"
+echo ""
+
