@@ -22,6 +22,11 @@ functions:
       artifact: target/function.zip
     events:
       - http:
+          path: /
+          method: ANY
+          cors: true
+          integration: lambda
+      - http:
           path: /{proxy+}
           method: ANY
           cors: true

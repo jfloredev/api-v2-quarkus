@@ -7,6 +7,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +31,10 @@ public class UsuarioController {
                 .entity(nuevoUsuario)
                 .build();
         } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST)
-                .entity(Map.of("error", e.getMessage()))
+                .entity(error)
                 .build();
         }
     }
@@ -48,8 +51,10 @@ public class UsuarioController {
         if (usuario != null) {
             return Response.ok(usuario).build();
         } else {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Usuario no encontrado");
             return Response.status(Response.Status.NOT_FOUND)
-                .entity(Map.of("error", "Usuario no encontrado"))
+                .entity(error)
                 .build();
         }
     }
@@ -64,7 +69,47 @@ public class UsuarioController {
         return Response.ok(usuarios).build();
     }
 
+    /**
+     * Endpoint para buscar un usuario por email
+     * GET /api/usuarios/email/{email}
+     */
+    @GET
+    @Path("/email/{email}")
+    public Response obtenerUsuarioPorEmail(@PathParam("email") String email) {
+        Usuario usuario = usuarioService.obtenerUsuarioPorEmail(email);
 
+        if (usuario != null) {
+            return Response.ok(usuario).build();
+        } else {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Usuario no encontrado");
+            return Response.status(Response.Status.NOT_FOUND)
+                .entity(error)
+                .build();
+        }
+    }
 
+    /**
+     * Endpoint para inicializar la tabla (solo para desarrollo/testing)
+     * POST /api/usuarios/init
+     */
+    @POST
+    @Path("/init")
+    public Response inicializarTabla() {
+        try {
+            usuarioService.crearTablaUsuarios();
+            Map<String, String> mensaje = new HashMap<>();
+            mensaje.put("mensaje", "Tabla inicializada correctamente");
+            return Response.ok()
+                .entity(mensaje)
+                .build();
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(error)
+                .build();
+        }
+    }
 }
 
