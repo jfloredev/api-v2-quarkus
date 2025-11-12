@@ -1,6 +1,10 @@
 org: renadroid
 service: api-usuarios
 
+package:
+  individually: true
+  excludeDevDependencies: true
+
 provider:
   name: aws
   runtime: java17
