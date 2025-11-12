@@ -1,6 +1,21 @@
 # 🚀 INICIO RÁPIDO
 
-## Para desplegar en AWS (desde cero)
+## Para desplegar en AWS (después de configurar la VM)
+
+Si es la primera vez que usas la VM, ejecuta esto primero:
+# Si ya clonaste y configuraste, solo necesitas:
+git clone <tu-repo>
+# 1. Dar permisos (si no lo hiciste)
+
+# 2. Configurar el entorno (instala Java, Node, Serverless, etc)
+# 2. Compilar y desplegar
+./setup-vm.sh
+# 2. Compilar y desplegar
+# 3. Reiniciar sesión para aplicar configuración
+source ~/.bashrc
+# 3. Probar (usar el endpoint que te da el comando anterior)
+
+## Para desplegar en AWS (después de configurar la VM)
 
 ```bash
 # 1. Clonar

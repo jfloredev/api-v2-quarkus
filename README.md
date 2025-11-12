@@ -12,17 +12,22 @@ API REST para gestionar usuarios con validación de emails únicos, construida c
 
 ## 🚀 Despliegue a AWS (Producción)
 
-### 1. Clonar el proyecto
+### 0. Configuración inicial en VM (solo primera vez)
 
 ```bash
 git clone <tu-repositorio>
 cd api-v2-quarkus
-chmod +x deploy.sh
+chmod +x setup-vm.sh
+./setup-vm.sh
+source ~/.bashrc
 ```
 
-### 2. Compilar y desplegar
+Esto instala: Java 17, Node.js, Serverless Framework, Maven y Git.
+
+### 1. Compilar y desplegar
 
 ```bash
+chmod +x deploy.sh
 ./deploy.sh dev
 ```
 
@@ -32,7 +37,7 @@ Esto hará:
 - Desplegar la función Lambda
 - Crear el API Gateway
 
-### 3. Probar el API
+### 2. Probar el API
 
 ```bash
 # Usar el endpoint que te da el deploy

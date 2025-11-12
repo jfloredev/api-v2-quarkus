@@ -7,6 +7,39 @@ echo "🚀 Desplegando API de Usuarios a AWS Lambda"
 echo "==========================================="
 echo ""
 
+# Detectar y configurar JAVA_HOME si no está configurado
+if [ -z "$JAVA_HOME" ]; then
+    echo "⚙️  Configurando JAVA_HOME..."
+
+    # Intentar encontrar Java en ubicaciones comunes
+    if [ -d "/usr/lib/jvm/java-17" ]; then
+        export JAVA_HOME=/usr/lib/jvm/java-17
+    elif [ -d "/usr/lib/jvm/java-17-amazon-corretto" ]; then
+        export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
+    elif [ -d "/usr/lib/jvm/java-17-openjdk" ]; then
+        export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+    elif command -v java &> /dev/null; then
+        # Intentar detectar desde el comando java
+        JAVA_PATH=$(which java)
+        export JAVA_HOME=$(dirname $(dirname $(readlink -f $JAVA_PATH)))
+    else
+        echo "❌ Java 17 no encontrado"
+        echo "📦 Instala Java 17 con:"
+        echo "   sudo yum install java-17-amazon-corretto-devel -y"
+        exit 1
+    fi
+
+    export PATH=$JAVA_HOME/bin:$PATH
+    echo "✅ JAVA_HOME configurado: $JAVA_HOME"
+else
+    echo "✅ JAVA_HOME ya configurado: $JAVA_HOME"
+fi
+
+# Verificar versión de Java
+echo "☕ Verificando Java..."
+java -version
+echo ""
+
 # Verificar que serverless esté instalado
 if ! command -v serverless &> /dev/null; then
     echo "❌ Serverless Framework no está instalado"
